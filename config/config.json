@@ -1,0 +1,18 @@
+{
+  "data": {
+    "filename": "data/raw/btc_1h_data_2018_to_2025.csv",
+    "processed_filename": "data/processed/btc_preprocessed.csv",
+    "seq_len": 60,
+    "prediction_horizon": 1
+  },
+  "training": {
+    "epochs": 50,
+    "batch_size": 64,
+    "learning_rate": 0.0005,
+    "patience": 15
+  },
+  "paths": {
+    "model_save": "outputs/models/combine_model.keras",
+    "log_save": "outputs/logs/training_log.csv"
+  }
+}
