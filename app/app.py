@@ -22,7 +22,7 @@ LOG_FILENAME = os.path.join(BASE_DIR, config['paths']['log_save'])
 SCALER_FILENAME = os.path.join(BASE_DIR, 'outputs', 'models', 'scaler_data.pkl')
 SEQ_LEN = config['data']['seq_len']
 
-st.set_page_config(page_title="BTC Predictor", layout="wide")
+st.set_page_config(page_title="BTC AI Predictor", layout="wide")
 st.title("Bitcoin AI Predictor (Model: Bi-LSTM + Attention)")
 
 # Custom Layer
@@ -122,9 +122,20 @@ else:
 c1, c2 = st.columns([1, 4])
 with c1:
     st.subheader("📅 Select Date")
-    date_sel = st.date_input("Date", value=df['Date'].max())
     
+    # DATE RESTRICTION LOGIC
+    min_d = df['Date'].min().date()
+    max_d = df['Date'].max().date()
+    
+    date_sel = st.date_input(
+        "Date", 
+        value=max_d, 
+        min_value=min_d, 
+        max_value=max_d
+    )
+
     st.markdown("---")
+
     st.info(
         """
         **Note:**
@@ -183,10 +194,10 @@ with c2:
     else:
         st.warning("No data for selected date.")
 
-# 7. Tabs
+# Tabs
 st.markdown("---")
 st.header("🔍 Model & Data Diagnostics")
-tab1, tab2, tab3 = st.tabs(["Processed Data", "Training History", "Evaluation Metrics"])
+tab1, tab2, tab3 = st.tabs(["📂 Processed Data", "📈 Training History", "✅ Evaluation Metrics"])
 
 with tab1:
     st.subheader("1. Data Sample")
@@ -277,7 +288,7 @@ with tab3:
         y_true_vol = eval_df['Actual_Vol'].values
         y_pred_class = (y_pred_probs > 0.5).astype(int)
 
-        # Classification (Split 1:2)
+        # A. Classification (Split 1:2)
         st.subheader("A. Direction Prediction")
         c1, c2 = st.columns([1, 2])
         
@@ -292,7 +303,7 @@ with tab3:
             st.markdown("**Detailed Metrics:**")
             st.dataframe(pd.DataFrame(report).transpose().style.background_gradient(cmap='Greens', subset=['f1-score', 'precision', 'recall']).format("{:.2%}"))
 
-        # Regression
+        # B. Regression
         st.markdown("---")
         st.subheader("B. Volatility Prediction")
         
